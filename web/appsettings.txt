@@ -1,0 +1,2 @@
+awsappid 123456
+awsappkey asdfasfdasf
