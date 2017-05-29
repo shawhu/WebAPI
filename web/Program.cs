@@ -34,8 +34,6 @@ namespace web
                 .Build();
 
             host.Run();
-
-
         }
     }
 }

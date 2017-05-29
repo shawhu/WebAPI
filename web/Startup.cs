@@ -27,15 +27,21 @@ namespace web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             //using console logger
-            loggerFactory.AddConsole();
+            loggerFactory.AddConsole(LogLevel.Warning);
             //using log4net logger
             loggerFactory.AddLog4Net();
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-            
+
             //Register your ServiceStack AppHost as a .NET Core module
-            app.UseServiceStack(new AppHost());
+            AppHost apphost = new AppHost();
+            apphost.PreRequestFilters.Add((httpReq, httpRes) =>
+            {
+                httpReq.UseBufferedStream = true;
+                //httpRes.UseBufferedStream = true;
+            });
+            app.UseServiceStack(apphost);
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync("Hello World!");
@@ -51,27 +57,29 @@ namespace web
             AppSettings = File.Exists(liveSettings)
                 ? (IAppSettings)new TextFileSettings(liveSettings)
                 : new AppSettings();
+
         }
-        
-        
+
+
         // Configure your AppHost with the necessary configuration and dependencies your App needs
         public override void Configure(Container container)
         {
+
             SetConfig(new HostConfig
             {
                 EnableFeatures = Feature.All
-                .Remove(Feature.Html)
+                //.Remove(Feature.Html)
                 //.Remove(Feature.Metadata)
                 // .Remove(Feature.PredefinedRoutes)
                 // .Add(Feature.ProtoBuf)
                 ,
-                DefaultContentType = MimeTypes.Json,
+                //DefaultContentType = MimeTypes.Json,
                 DefaultRedirectPath = "/metadata", //set default|index|home
             });
             Plugins.Add(new ValidationFeature());
             Plugins.Add(new CorsFeature());
             container.RegisterValidators(typeof(TestRequestValidator).GetAssembly());
-            
+
             //Register Redis Client Manager singleton in ServiceStack's built-in Func IOC
             //container.Register<IRedisClientsManager>(new BasicRedisClientManager("localhost"));
         }

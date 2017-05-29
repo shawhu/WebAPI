@@ -1,23 +1,39 @@
+using System;
+using System.Collections.Generic;
 using ServiceStack;
 using ServiceStack.Configuration;
+using ServiceStack.Logging;
 
 namespace web
 {
     public class MainService:Service
     {
-        public IAppSettings AppSettings { get; set; }
+        public IAppSettings Settings { get; set; }
+        
 
-        public TestResponse Any(TestRequest req)
+        public object Any(TestRequest req)
         {
+            ILog log = LogManager.GetLogger(typeof(TestRequest));
             string str = "";
+            Dictionary<string,string> dict = new Dictionary<string,string>();
+            //testing Common
+            DateTime dt = Common.GetDatetimeFromUnixTime(req.Timestamp);
+            dict.Add("Datetime",$"{dt.ToString()}");
+
             var token = base.Request.GetHeader("Authorization");
-            str+=$"Token:{token} ";
-            var awsappid = AppSettings.GetString("awsappid");
-            str+=$"AwsAppId:{awsappid} ";
+            dict.Add("Token",$"{token}");
+
+            var awsappid = Settings.GetString("awsappid");//case sensitive
+            dict.Add("AwsAppID",$"{awsappid}");
+
+            str+=$" Input:{req.Input}";
+            dict.Add("Input",$"{req.Input}");
 
             var result = new TestResponse(){
-                Output = str+$"Input:{req.Input}"
+                Output = "",
+                dictOutput = dict
             };
+            Common.LogDTO(base.Request,result);
             return result;
         }
     }

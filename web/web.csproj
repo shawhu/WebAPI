@@ -8,6 +8,8 @@
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="servicestack.aws.core" Version="1.0.41" />
     <PackageReference Include="servicestack.core" Version="1.0.41" />
+    <PackageReference Include="servicestack.redis.core" Version="1.0.41" />
   </ItemGroup>
 </Project>
