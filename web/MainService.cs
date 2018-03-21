@@ -11,6 +11,8 @@ namespace web
     {
         public IAppSettings Settings { get; set; }
         private static NLog.Logger log = NLog.LogManager.GetCurrentClassLogger();
+
+        // /test/22
         public async Task<object> Any(TestRequest req)
         {
 

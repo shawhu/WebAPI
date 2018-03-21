@@ -127,14 +127,17 @@ namespace web
         public string subscription_provided_by_org { get; set; }
 
         private static AmazonDynamoDBClient _awsdb = new AmazonDynamoDBClient("AKIAPEDOSXBVQYIP5CQA","jqo1c2fsqt2B945e3ZPJep/ZLqAAZGHKXvxNKW3k",RegionEndpoint.CNNorth1);
-        private static DynamoDBContext _ctxt=Common.GetDDBContextWithPrefix(_awsdb);
+        private static DynamoDBContext _ctxt = Common.GetDDBContextWithPrefix(_awsdb);
         public static async Task<MemberModel> GetUserWithLoginName(string loginname)
         {
-            var member = await _ctxt.LoadAsync<MemberModel>(loginname);
+            DynamoDBContext context = Common.GetDDBContextWithPrefix(_awsdb);
+            //var context = _ctxt;
+            var member = await context.LoadAsync<MemberModel>(loginname);
             if (member!=null)
             {
                 member.EncryptedPassword = null;
             }
+            //context.Dispose();
             return member;
         }
     }
