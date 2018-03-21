@@ -130,14 +130,14 @@ namespace web
         private static DynamoDBContext _ctxt = Common.GetDDBContextWithPrefix(_awsdb);
         public static async Task<MemberModel> GetUserWithLoginName(string loginname)
         {
-            DynamoDBContext context = Common.GetDDBContextWithPrefix(_awsdb);
-            //var context = _ctxt;
+            //DynamoDBContext context = Common.GetDDBContextWithPrefix(_awsdb);
+            var context = _ctxt;
             var member = await context.LoadAsync<MemberModel>(loginname);
             if (member!=null)
             {
                 member.EncryptedPassword = null;
             }
-            context.Dispose();
+            //context.Dispose();
             return member;
         }
     }
