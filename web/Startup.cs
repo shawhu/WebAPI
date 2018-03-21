@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
+using NLog.Web;
 using ServiceStack;
 using ServiceStack.Configuration;
 using ServiceStack.Validation;
@@ -26,10 +28,9 @@ namespace web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            //using console logger
-            loggerFactory.AddConsole(LogLevel.Warning);
-            //using log4net logger
-            loggerFactory.AddLog4Net();
+            env.ConfigureNLog("nlog.config");
+            //add NLog to ASP.NET Core
+            loggerFactory.AddNLog();
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
@@ -67,9 +68,10 @@ namespace web
 
             SetConfig(new HostConfig
             {
+                DefaultContentType = MimeTypes.Json,
                 EnableFeatures = Feature.All
-                //.Remove(Feature.Html)
-                //.Remove(Feature.Metadata)
+                .Remove(Feature.Html)
+                .Remove(Feature.Metadata)
                 // .Remove(Feature.PredefinedRoutes)
                 // .Add(Feature.ProtoBuf)
                 ,

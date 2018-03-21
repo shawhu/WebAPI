@@ -5,15 +5,15 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml;
-using log4net;
-using log4net.Config;
 using Microsoft.AspNetCore.Hosting;
+using NLog;
+using NLog.Web;
 
 namespace web
 {
     public class Program
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(Program));
+        private static readonly NLog.Logger log = LogManager.GetLogger("Program");
         public static void Main(string[] args)
         {
             //log4net tryouts
@@ -31,6 +31,8 @@ namespace web
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
+                .UseUrls("http://*:5000")
+                .UseNLog()
                 .Build();
 
             host.Run();
