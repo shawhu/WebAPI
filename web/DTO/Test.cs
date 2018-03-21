@@ -14,6 +14,12 @@ namespace web
         public string Input { get; set; }
         public long Timestamp { get; set; }
     }
+    [Api("Member Test request")]
+    [Route("/membertest", "GET")]
+    public class MemberTestRequest : IReturn<TestResponse>
+    {
+        
+    }
     public class TestResponse
     {
         public Dictionary<string, string> dictOutput { get; set; }

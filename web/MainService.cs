@@ -15,7 +15,10 @@ namespace web
         // /test/22
         public async Task<object> Any(TestRequest req)
         {
-
+            return $"test success:{req.Input}";
+        }
+        public async Task<object> Any(MemberTestRequest req)
+        {
             //membermodel test
             var member = await MemberModel.GetUserWithLoginName("shawhu@qq.com");
 
