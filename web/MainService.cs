@@ -13,7 +13,7 @@ namespace web
         private static NLog.Logger log = NLog.LogManager.GetCurrentClassLogger();
 
         // /test/22
-        public async Task<object> Any(TestRequest req)
+        public object Any(TestRequest req)
         {
             return $"test success:{req.Input}";
         }
